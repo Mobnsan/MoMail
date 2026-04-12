@@ -40,8 +40,25 @@ function Contacts() {
     setFileName(file.name);
     try {
       const result = await uploadContactFile(file);
-      setRows(result.rows || []);
-      setFieldMap(result.mapping || detectFields(result.rows));
+      const rowsResult = result.rows || [];
+      const mappingResult = result.mapping || detectFields(rowsResult);
+      
+      setRows(rowsResult);
+      setFieldMap(mappingResult);
+
+      if (rowsResult.length > 0) {
+        const mainSourceColumns = Object.values(mappingResult);
+        const allColumns = Object.keys(rowsResult[0] || {});
+        const autoCustomFields = allColumns
+          .filter(col => !mainSourceColumns.includes(col))
+          .map((col, idx) => ({
+            id: Date.now() + idx,
+            key: col.toLowerCase().trim().replace(/\s+/g, '_').replace(/[^\w]/g, ''),
+            source: col
+          }));
+        setCustomFields(autoCustomFields);
+      }
+
       setMessage('File uploaded successfully. Map the columns and save contacts.');
     } catch (error) {
       setMessage(error.message || 'Error reading file. Please choose a valid CSV or XLSX file.');
