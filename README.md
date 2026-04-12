@@ -1,3 +1,12 @@
+---
+title: MoMail
+emoji: 📧
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+pinned: false
+---
+
 # MoMail 
 
 MoMail is a modern, full-stack email marketing platform designed to help you manage contacts, create beautiful templates, and launch email campaigns with ease.
