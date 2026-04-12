@@ -161,6 +161,10 @@ function Campaigns() {
                           <th>Name</th>
                           <th>Email</th>
                           <th>Company</th>
+                          {contacts[0] && Object.keys(contacts[0])
+                            .filter(k => !['id', 'ownerId', 'name', 'email', 'company'].includes(k))
+                            .map(k => <th key={k}>{k}</th>)
+                          }
                         </tr>
                       </thead>
                       <tbody>
@@ -176,6 +180,10 @@ function Campaigns() {
                             <td>{contact.name}</td>
                             <td>{contact.email}</td>
                             <td>{contact.company}</td>
+                            {Object.keys(contact)
+                              .filter(k => !['id', 'ownerId', 'name', 'email', 'company'].includes(k))
+                              .map(k => <td key={k}>{contact[k]}</td>)
+                            }
                           </tr>
                         ))}
                       </tbody>
