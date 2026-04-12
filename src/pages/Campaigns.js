@@ -13,6 +13,7 @@ function Campaigns() {
   const [selectedContactIds, setSelectedContactIds] = useState([]);
   const [scheduledAt, setScheduledAt] = useState('');
   const [statusMessage, setStatusMessage] = useState('');
+  const [viewDetails, setViewDetails] = useState(null);
   usePageAnimation();
   const campaignsRef = useRef([]);
 
@@ -232,15 +233,25 @@ function Campaigns() {
                     <th>Status</th>
                     <th>Recipients</th>
                     <th>Scheduled</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {campaigns.map((campaign) => (
                     <tr key={campaign.id}>
                       <td>{campaign.name}</td>
-                      <td>{campaign.status}</td>
+                      <td>
+                        <span className={`status-pill status-${campaign.status}`}>
+                          {campaign.status}
+                        </span>
+                      </td>
                       <td>{campaign.recipientCount}</td>
                       <td>{new Date(campaign.scheduledAt).toLocaleString()}</td>
+                      <td>
+                        <button className="button-secondary" onClick={() => setViewDetails(campaign)} style={{ padding: '4px 12px', fontSize: '13px' }}>
+                          View Details
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -248,6 +259,56 @@ function Campaigns() {
             </div>
           )}
         </section>
+
+        {viewDetails && (
+          <div className="modal-overlay" onClick={() => setViewDetails(null)}>
+            <div className="modal-content card" onClick={(e) => e.stopPropagation()}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+                <h2>Campaign Details: {viewDetails.name}</h2>
+                <button className="button-icon" onClick={() => setViewDetails(null)}>✕</button>
+              </div>
+              
+              <div className="card-grid" style={{ marginBottom: 24 }}>
+                <div className="card">
+                  <strong>{viewDetails.status}</strong>
+                  <div>Overall Status</div>
+                </div>
+                <div className="card">
+                  <strong>{viewDetails.deliveredCount} / {viewDetails.recipientCount}</strong>
+                  <div>Delivered</div>
+                </div>
+              </div>
+
+              <h3>Recipient Log</h3>
+              <div className="table-wrapper" style={{ maxHeight: '400px' }}>
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th>Email</th>
+                      <th>Status</th>
+                      <th>Error / Info</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {viewDetails.recipients.map((r) => (
+                      <tr key={r.id}>
+                        <td>{r.email}</td>
+                        <td>
+                          <span className={`status-pill status-${r.status}`}>
+                            {r.status}
+                          </span>
+                        </td>
+                        <td style={{ color: r.status === 'failed' ? '#f87171' : 'inherit', fontSize: '13px' }}>
+                          {r.error || (r.status === 'sent' ? 'Delivered successfully' : '-')}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
