@@ -56,7 +56,7 @@ router.post('/', requireAuth, async (req, res) => {
   for (const contact of selectedContacts) {
     const message = {
       to: contact.email,
-      from: template.senderEmail || process.env.EMAIL_FROM || 'no-reply@mona-email.app',
+      from: template.senderEmail || userSettings.fromEmail || process.env.EMAIL_FROM || 'no-reply@mona-email.app',
       subject: renderTemplate(template.subject, contact),
       text: renderTemplate(template.body, contact),
       html: renderTemplate(template.body, contact).replace(/\n/g, '<br />'),
