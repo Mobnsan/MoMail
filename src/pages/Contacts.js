@@ -191,7 +191,7 @@ function Contacts() {
                   </div>
                 ))}
                 
-                <button className="button-secondary" type="button" onClick={addCustomField}>
+                <button className="button" type="button" onClick={addCustomField} style={{ width: 'auto', padding: '10px 20px' }}>
                   + Add custom field
                 </button>
               </div>
@@ -232,6 +232,10 @@ function Contacts() {
                     <th>Name</th>
                     <th>Email</th>
                     <th>Company</th>
+                    {saved[0] && Object.keys(saved[0])
+                      .filter(k => !['id', 'ownerId', 'name', 'email', 'company'].includes(k))
+                      .map(k => <th key={k}>{k}</th>)
+                    }
                   </tr>
                 </thead>
                 <tbody>
@@ -240,6 +244,10 @@ function Contacts() {
                       <td>{contact.name}</td>
                       <td>{contact.email}</td>
                       <td>{contact.company}</td>
+                      {Object.keys(contact)
+                        .filter(k => !['id', 'ownerId', 'name', 'email', 'company'].includes(k))
+                        .map(k => <td key={k}>{contact[k]}</td>)
+                      }
                     </tr>
                   ))}
                 </tbody>
