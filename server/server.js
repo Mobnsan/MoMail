@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const session = require('express-session');
+const path = require('path');
 const authRoutes = require('./routes/auth');
 const contactsRoutes = require('./routes/contacts');
 const templatesRoutes = require('./routes/templates');
@@ -55,6 +56,14 @@ app.use('/api/settings', settingsRoutes);
 app.get('/api/ping', (req, res) => {
   res.json({ status: 'ok' });
 });
+
+// Serve static assets in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../build')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../build', 'index.html'));
+  });
+}
 
 app.listen(port, () => {
   console.log(`MoMail backend listening on http://localhost:${port}`);
