@@ -8,20 +8,22 @@ RUN npm run build
 
 # Step 2: Build the Node.js Backend
 FROM node:20
-# Hugging Face runs with UID 1000
-RUN useradd -m -u 1000 user
 WORKDIR /app
 
-# Ensure correct ownership
-COPY --chown=user server/package*.json ./server/
+# The 'node' user in this image already has UID 1000
+# Ensure correct ownership of the app directory
+RUN chown -R node:node /app
+
+# Copy files and ensure the 'node' user owns them
+COPY --chown=node:node server/package*.json ./server/
 RUN cd server && npm install
-COPY --chown=user server/ ./server/
-COPY --chown=user --from=build /app/build ./build
+COPY --chown=node:node server/ ./server/
+COPY --chown=node:node --from=build /app/build ./build
 
-# Create data directory and ensure it is writable
-RUN mkdir -p /app/server/data && chown -R user:user /app/server/data
+# Create data directory and ensure it is writable by the 'node' user
+RUN mkdir -p /app/server/data && chown -R node:node /app/server/data
 
-USER user
+USER node
 EXPOSE 7860
 ENV PORT=7860
 ENV NODE_ENV=production
