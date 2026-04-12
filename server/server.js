@@ -68,3 +68,9 @@ if (process.env.NODE_ENV === 'production') {
 app.listen(port, () => {
   console.log(`MoMail backend listening on http://localhost:${port}`);
 });
+
+// Basic error logging
+app.use((err, req, res, next) => {
+  console.error('SERVER ERROR:', err);
+  res.status(500).json({ error: 'Internal Server Error', message: err.message });
+});
