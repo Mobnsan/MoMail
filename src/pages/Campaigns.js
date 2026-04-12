@@ -248,7 +248,7 @@ function Campaigns() {
                       <td>{campaign.recipientCount}</td>
                       <td>{new Date(campaign.scheduledAt).toLocaleString()}</td>
                       <td>
-                        <button className="button-secondary" onClick={() => setViewDetails(campaign)} style={{ padding: '4px 12px', fontSize: '13px' }}>
+                        <button className="button" onClick={() => setViewDetails(campaign)} style={{ minWidth: 'auto', padding: '8px 16px', fontSize: '12px' }}>
                           View Details
                         </button>
                       </td>
