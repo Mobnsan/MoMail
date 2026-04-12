@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, useRef } from 'react';
 import gsap from 'gsap';
 import NavBar from '../components/NavBar';
-import { createTemplate, deleteTemplate, duplicateTemplate, getTemplates } from '../api';
+import { createTemplate, deleteTemplate, duplicateTemplate, getTemplates, getContacts } from '../api';
 import { renderTemplate, sampleContact } from '../utils/templateUtils';
 import { usePageAnimation } from '../hooks/useAnimations';
 
@@ -19,9 +19,23 @@ function Templates() {
   const templatesRef = useRef([]);
   const [customVariables, setCustomVariables] = useState([]);
   const [newVarName, setNewVarName] = useState('');
+  const [detectedVariables, setDetectedVariables] = useState([]);
+  const bodyRef = useRef(null);
 
   useEffect(() => {
     getTemplates().then(setTemplates).catch(() => setTemplates([]));
+    
+    getContacts().then(loaded => {
+      const keys = new Set();
+      loaded.forEach(contact => {
+        Object.keys(contact).forEach(k => {
+          if (!['id', 'ownerId', 'name', 'email', 'company'].includes(k)) {
+            keys.add(k);
+          }
+        });
+      });
+      setDetectedVariables(Array.from(keys));
+    }).catch(() => setDetectedVariables([]));
   }, []);
 
   useEffect(() => {
@@ -88,7 +102,30 @@ function Templates() {
     setCustomVariables(customVariables.filter(v => v !== varName));
   };
 
-  const allVariables = ['name', 'email', 'company', ...customVariables];
+  function insertVariable(varName) {
+    const textarea = bodyRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = template.body;
+    const tag = `{{${varName}}}`;
+    
+    const newText = text.substring(0, start) + tag + text.substring(end);
+    setTemplate({ ...template, body: newText });
+
+    // Move cursor after the inserted tag
+    setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(start + tag.length, start + tag.length);
+    }, 0);
+  }
+
+  const allVariables = useMemo(() => {
+    const base = ['name', 'email', 'company'];
+    const combined = [...base, ...detectedVariables, ...customVariables];
+    return Array.from(new Set(combined));
+  }, [detectedVariables, customVariables]);
   const preview = useMemo(() => renderTemplate(template.body, sampleContact), [template.body]);
 
   return (
@@ -146,17 +183,24 @@ function Templates() {
               <label htmlFor="body">Message body</label>
               <textarea
                 id="body"
+                ref={bodyRef}
                 value={template.body}
                 onChange={(e) => setTemplate({ ...template, body: e.target.value })}
               />
             </div>
             <div className="footer-note" style={{ marginTop: 12, marginBottom: 20 }}>
-              <strong>Use variables:</strong> 
+              <strong>Use variables (click to insert):</strong> 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 10 }}>
                 {allVariables.map((v) => (
-                  <span key={v} className="label-pill">
+                  <button 
+                    key={v} 
+                    type="button"
+                    className="label-pill" 
+                    onClick={() => insertVariable(v)}
+                    style={{ cursor: 'pointer', border: 'none' }}
+                  >
                     {`{{${v}}}`}
-                  </span>
+                  </button>
                 ))}
               </div>
             </div>
