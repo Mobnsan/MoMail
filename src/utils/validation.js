@@ -53,3 +53,13 @@ export function detectFields(rows) {
 export function getMappedValue(row, fieldKey, map) {
   return row[map[fieldKey]] ?? '';
 }
+
+export function mapRow(row, map) {
+  return Object.keys(map).reduce((acc, targetKey) => {
+    const sourceKey = map[targetKey];
+    if (sourceKey) {
+      acc[targetKey] = row[sourceKey] ?? '';
+    }
+    return acc;
+  }, {});
+}
