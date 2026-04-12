@@ -16,10 +16,8 @@ const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin) {
-        return callback(null, true);
-      }
-      if (process.env.NODE_ENV !== 'production') {
+      // In production, if we serve the frontend ourselves, CORS is less strict
+      if (!origin || process.env.NODE_ENV === 'production') {
         return callback(null, true);
       }
       if (origin === frontendUrl) {
@@ -69,8 +67,15 @@ app.listen(port, () => {
   console.log(`MoMail backend listening on http://localhost:${port}`);
 });
 
-// Basic error logging
+// Detailed error logging
 app.use((err, req, res, next) => {
-  console.error('SERVER ERROR:', err);
-  res.status(500).json({ error: 'Internal Server Error', message: err.message });
+  console.error('--- START SERVER ERROR ---');
+  console.error('Message:', err.message);
+  console.error('Stack:', err.stack);
+  console.error('--- END SERVER ERROR ---');
+  res.status(500).json({ 
+    error: 'Internal Server Error', 
+    message: err.message,
+    dev_note: 'Check server logs for full stack trace'
+  });
 });
