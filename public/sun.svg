@@ -1,0 +1,26 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Sun rays -->
+  <g stroke="#f4d966" stroke-width="20" stroke-linecap="round" fill="none">
+    <line x1="256" y1="20" x2="256" y2="80"/>
+    <line x1="256" y1="432" x2="256" y2="492"/>
+    <line x1="20" y1="256" x2="80" y2="256"/>
+    <line x1="432" y1="256" x2="492" y2="256"/>
+    <line x1="70" y1="70" x2="113" y2="113"/>
+    <line x1="399" y1="399" x2="442" y2="442"/>
+    <line x1="442" y1="70" x2="399" y2="113"/>
+    <line x1="113" y1="399" x2="70" y2="442"/>
+  </g>
+  <!-- Outer circle for Earth -->
+  <circle cx="256" cy="256" r="180" fill="#1e90ff"/>
+  <!-- Land masses -->
+  <ellipse cx="210" cy="200" rx="80" ry="70" fill="#7fdd7f"/>
+  <ellipse cx="320" cy="220" rx="60" ry="75" fill="#7fdd7f"/>
+  <ellipse cx="240" cy="310" rx="70" ry="60" fill="#7fdd7f"/>
+  <!-- Additional land details -->
+  <circle cx="170" cy="160" r="25" fill="#7fdd7f"/>
+  <circle cx="350" cy="280" r="20" fill="#7fdd7f"/>
+  <path d="M 200 250 Q 220 240 240 250 Q 220 260 200 250" fill="#7fdd7f"/>
+  <!-- Water details -->
+  <path d="M 150 280 Q 160 270 170 280" stroke="#1e90ff" stroke-width="3" fill="none"/>
+  <circle cx="290" cy="150" r="8" fill="#1e90ff" opacity="0.5"/>
+</svg>

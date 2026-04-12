@@ -1,0 +1,202 @@
+{
+  "users": [
+    {
+      "id": "6d27405c-264c-470c-96cc-5bdd05cf4d0a",
+      "name": "mobn",
+      "email": "benyadinemohamed@gmail.com",
+      "passwordHash": "$2a$10$y.3kPaAkuX3Tlki1oMhqueb1TmD.zoZegbSYmJdH6HNFoUxVZESWm"
+    },
+    {
+      "id": "46836496-a48b-4ff0-a2a6-4587313e3de2",
+      "name": "mobn",
+      "email": "benyadineemohamed@gmail.com",
+      "passwordHash": "$2a$10$wFNM7FCeQ0aYnNl0puhauerguEX3JeqpVghcRwmuSyk/ybUK36Kdu"
+    },
+    {
+      "id": "83b8b0ae-63a1-4287-9808-35de245480b6",
+      "name": "testuser",
+      "email": "test@example.com",
+      "passwordHash": "$2a$10$lTCKoeYp4mWHpFDs6onfOuvAaTbEOQle4i2F4f49OyXhbXDZnmD7e"
+    }
+  ],
+  "contacts": [
+    {
+      "name": "said ",
+      "email": "fromza.dev@gmail.com",
+      "company": "fromza.dev@gmail.com",
+      "id": "46836496-a48b-4ff0-a2a6-4587313e3de2-fromza.dev@gmail.com-1775828594454",
+      "ownerId": "46836496-a48b-4ff0-a2a6-4587313e3de2"
+    }
+  ],
+  "templates": [
+    {
+      "id": "5a046745-4c6b-4d3b-b482-e93614d5d354",
+      "ownerId": "46836496-a48b-4ff0-a2a6-4587313e3de2",
+      "name": "hello world",
+      "senderName": "mohamed ben yadine",
+      "senderEmail": "benyadineemohamed@gmail.com",
+      "subject": "peace",
+      "body": "hi i'm {{name}}\ni work in {{company}}\n{{email}}",
+      "createdAt": "2026-04-10T13:36:45.662Z"
+    },
+    {
+      "id": "bea4c48e-d917-4dde-b1b6-3a2a1b243a20",
+      "ownerId": "46836496-a48b-4ff0-a2a6-4587313e3de2",
+      "name": "hello",
+      "senderName": "mohamed ben yadine",
+      "senderEmail": "benyadineemohamed@gmail.com",
+      "subject": "peace2",
+      "body": "{{name}}\n{{company}}\n{{email}}",
+      "createdAt": "2026-04-10T13:42:59.173Z"
+    },
+    {
+      "id": "5f396b73-9e85-4ea6-aad9-40aaad87308a",
+      "ownerId": "46836496-a48b-4ff0-a2a6-4587313e3de2",
+      "name": "hello",
+      "senderName": "mohamed ben yadine",
+      "senderEmail": "benyadineemohamed@gmail.com",
+      "subject": "hi",
+      "body": "salam {{name}}\ntest test had email howa li sift lih {{email}}",
+      "createdAt": "2026-04-10T17:01:11.339Z"
+    }
+  ],
+  "campaigns": [
+    {
+      "id": "904fe45b-400e-4939-864c-f03950068f07",
+      "ownerId": "46836496-a48b-4ff0-a2a6-4587313e3de2",
+      "name": "hello",
+      "templateId": "bea4c48e-d917-4dde-b1b6-3a2a1b243a20",
+      "status": "sent",
+      "createdAt": "2026-04-10T13:43:29.931Z",
+      "scheduledAt": "2026-04-10T13:43:00.000Z",
+      "recipientCount": 1,
+      "deliveredCount": 1,
+      "recipients": [
+        {
+          "id": "82b73922-431d-4509-adf7-76e44cb94369",
+          "email": "fromza.dev@gmail.com",
+          "name": "said ",
+          "company": "fromza.dev@gmail.com",
+          "status": "sent",
+          "subject": "peace2"
+        }
+      ]
+    },
+    {
+      "id": "60bcbdad-1c49-4732-a7db-dd108a17b7ef",
+      "ownerId": "46836496-a48b-4ff0-a2a6-4587313e3de2",
+      "name": "hello world",
+      "templateId": "5a046745-4c6b-4d3b-b482-e93614d5d354",
+      "status": "sent",
+      "createdAt": "2026-04-10T13:58:45.896Z",
+      "scheduledAt": "2026-04-10T13:58:45.896Z",
+      "recipientCount": 1,
+      "deliveredCount": 1,
+      "recipients": [
+        {
+          "id": "6ba49f2c-c75d-46de-b549-4ba8a2c16291",
+          "email": "fromza.dev@gmail.com",
+          "name": "said ",
+          "company": "fromza.dev@gmail.com",
+          "status": "sent",
+          "subject": "peace"
+        }
+      ]
+    },
+    {
+      "id": "0676d6c6-f138-4560-accf-2dda194c8bb6",
+      "ownerId": "46836496-a48b-4ff0-a2a6-4587313e3de2",
+      "name": "hello",
+      "templateId": "bea4c48e-d917-4dde-b1b6-3a2a1b243a20",
+      "status": "sent",
+      "createdAt": "2026-04-10T16:59:13.045Z",
+      "scheduledAt": "2026-04-10T16:59:00.000Z",
+      "recipientCount": 1,
+      "deliveredCount": 1,
+      "recipients": [
+        {
+          "id": "d5f8a7f7-6d10-4586-8265-13de2af75af3",
+          "email": "fromza.dev@gmail.com",
+          "name": "said ",
+          "company": "fromza.dev@gmail.com",
+          "status": "sent",
+          "subject": "peace2"
+        }
+      ]
+    },
+    {
+      "id": "77ae1e00-9187-436a-8a92-ba51bcc5da28",
+      "ownerId": "46836496-a48b-4ff0-a2a6-4587313e3de2",
+      "name": "hello",
+      "templateId": "5f396b73-9e85-4ea6-aad9-40aaad87308a",
+      "status": "scheduled",
+      "createdAt": "2026-04-10T17:01:33.251Z",
+      "scheduledAt": "2026-04-10T17:02:00.000Z",
+      "recipientCount": 1,
+      "deliveredCount": 0,
+      "recipients": [
+        {
+          "id": "74911c0b-6e35-4b40-9c39-62dd72581d05",
+          "email": "fromza.dev@gmail.com",
+          "name": "said ",
+          "company": "fromza.dev@gmail.com",
+          "status": "pending",
+          "subject": "hi"
+        }
+      ]
+    },
+    {
+      "id": "db516f5c-d407-4db3-a529-a3a59332893b",
+      "ownerId": "46836496-a48b-4ff0-a2a6-4587313e3de2",
+      "name": "hello",
+      "templateId": "5f396b73-9e85-4ea6-aad9-40aaad87308a",
+      "status": "sent",
+      "createdAt": "2026-04-10T17:03:47.564Z",
+      "scheduledAt": "2026-04-10T17:03:47.564Z",
+      "recipientCount": 1,
+      "deliveredCount": 1,
+      "recipients": [
+        {
+          "id": "ed64c80a-cc94-47e0-b83a-f37155958df8",
+          "email": "fromza.dev@gmail.com",
+          "name": "said ",
+          "company": "fromza.dev@gmail.com",
+          "status": "sent",
+          "subject": "hi"
+        }
+      ]
+    },
+    {
+      "id": "6b7c38b9-fc86-4987-912d-40f874555d59",
+      "ownerId": "46836496-a48b-4ff0-a2a6-4587313e3de2",
+      "name": "hello",
+      "templateId": "5f396b73-9e85-4ea6-aad9-40aaad87308a",
+      "status": "sent",
+      "createdAt": "2026-04-10T19:47:51.226Z",
+      "scheduledAt": "2026-04-10T19:47:51.226Z",
+      "recipientCount": 1,
+      "deliveredCount": 1,
+      "recipients": [
+        {
+          "id": "73eaa8a2-903b-4f45-9e3b-66133752e00e",
+          "email": "fromza.dev@gmail.com",
+          "name": "said ",
+          "company": "fromza.dev@gmail.com",
+          "status": "sent",
+          "subject": "hi"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "id": "f3b4412f-ceea-44d0-b1e7-4a34b0bb2101",
+      "ownerId": "46836496-a48b-4ff0-a2a6-4587313e3de2",
+      "provider": "sendgrid",
+      "providerConfig": {
+        "sendgridApiKey": "YOUR_SENDGRID_KEY_HERE"
+      },
+      "fromEmail": "benyadineemohamed@gmail.com"
+    }
+  ]
+}
