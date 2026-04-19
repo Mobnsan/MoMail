@@ -27,7 +27,7 @@ function Settings() {
         setProviderConfig({});
       });
 
-    // Animate cards on mount
+
     if (cardsRef.current.length > 0) {
       gsap.from(cardsRef.current, {
         duration: 0.6,

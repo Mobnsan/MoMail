@@ -114,7 +114,7 @@ function Templates() {
     const newText = text.substring(0, start) + tag + text.substring(end);
     setTemplate({ ...template, body: newText });
 
-    // Move cursor after the inserted tag
+
     setTimeout(() => {
       textarea.focus();
       textarea.setSelectionRange(start + tag.length, start + tag.length);

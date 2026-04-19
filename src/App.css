@@ -357,7 +357,7 @@ textarea:focus {
   color: #575f7a;
 }
 
-/* DARK MODE STYLES */
+
 html.dark-mode {
   --bg-primary: #1a1f36;
   --bg-secondary: #242d47;
@@ -508,7 +508,7 @@ html.dark-mode .form-group textarea:focus {
   box-shadow: 0 0 0 5px rgba(88, 114, 255, 0.15);
 }
 
-/* Custom variables section dark mode */
+
 html.dark-mode .label-pill {
   background: rgba(88, 114, 255, 0.15);
   color: #8ba6ff;

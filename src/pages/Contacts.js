@@ -114,7 +114,7 @@ function Contacts() {
         company: getMappedValue(row, 'company', fieldMap),
       };
       
-      // Add custom fields
+
       customFields.forEach((f) => {
         if (f.key && f.source) {
           contact[f.key] = row[f.source] ?? '';

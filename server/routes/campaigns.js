@@ -51,9 +51,9 @@ router.post('/', requireAuth, async (req, res) => {
 
   let finalStatus = campaignStatus;
   if (campaignStatus === 'sent') {
-    // Perform sending in background batches to not block the response
+
     const BATCH_SIZE = 5;
-    const DELAY_BETWEEN_BATCHES = 1000; // 1 second
+    const DELAY_BETWEEN_BATCHES = 1000;
 
     (async () => {
       for (let i = 0; i < selectedContacts.length; i += BATCH_SIZE) {
