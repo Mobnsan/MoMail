@@ -79,4 +79,26 @@ router.post('/', requireAuth, (req, res) => {
   res.json({ saved: contacts.length });
 });
 
+router.put('/:id', requireAuth, (req, res) => {
+  const { id } = req.params;
+  const updatedData = req.body;
+  const allContacts = readCollection('contacts');
+  
+  const index = allContacts.findIndex(c => c.id === id && c.ownerId === req.session.userId);
+  if (index === -1) return res.status(404).json({ error: 'Contact not found' });
+
+  allContacts[index] = { ...allContacts[index], ...updatedData };
+  saveCollection('contacts', allContacts);
+  res.json(allContacts[index]);
+});
+
+router.delete('/:id', requireAuth, (req, res) => {
+  const { id } = req.params;
+  const allContacts = readCollection('contacts');
+  
+  const filtered = allContacts.filter(c => !(c.id === id && c.ownerId === req.session.userId));
+  saveCollection('contacts', filtered);
+  res.json({ success: true });
+});
+
 module.exports = router;

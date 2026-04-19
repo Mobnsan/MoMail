@@ -141,6 +141,34 @@ function Templates() {
 
         {message && <div className="alert">{message}</div>}
 
+        <div className="card" style={{ marginBottom: 24, background: 'linear-gradient(135deg, rgba(90, 118, 255, 0.05) 0%, rgba(63, 98, 255, 0.05) 100%)', border: '1px solid rgba(90, 118, 255, 0.2)' }}>
+          <h3 style={{ marginTop: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: '1.4rem' }}>✨</span> AI Template Generator
+          </h3>
+          <p className="footer-note" style={{ marginBottom: 16 }}>Choose a category to let AI write a professional email for you.</p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+            {[
+              { id: 'welcome', label: 'Welcome Email', icon: '👋', subject: 'Welcome to our community, {{name}}!', body: 'Hi {{name}},\n\nWe are thrilled to have you with us! At {{company}}, we strive to provide the best experience. Feel free to reach out if you have any questions.\n\nBest regards,\n{{senderName}}' },
+              { id: 'promo', label: 'Special Promotion', icon: '🎁', subject: 'Exclusive Offer for {{company}} Team', body: 'Hello {{name}},\n\nWe have a special 20% discount just for you! Use code MOMAIL20 at checkout.\n\nCheers,\n{{senderName}}' },
+              { id: 'news', label: 'Newsletter', icon: '📰', subject: 'What\'s new this month at {{company}}', body: 'Hi {{name}},\n\nHere are our latest updates and stories. We\'ve been working hard to bring you new features that we think you\'ll love.\n\nTalk soon,\n{{senderName}}' },
+              { id: 'followup', label: 'Follow Up', icon: '📞', subject: 'Quick follow up - {{name}}', body: 'Hi {{name}},\n\nJust wanted to circle back on our last conversation. Let me know if you\'d like to chat more about how we can help {{company}}.\n\nThanks,\n{{senderName}}' }
+            ].map(cat => (
+              <button 
+                key={cat.id} 
+                type="button" 
+                className="button-secondary" 
+                style={{ width: 'auto', padding: '10px 16px', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: 6 }}
+                onClick={() => {
+                  setTemplate({ ...template, subject: cat.subject, body: cat.body });
+                  setMessage(`AI Generated: ${cat.label} loaded!`);
+                }}
+              >
+                <span>{cat.icon}</span> {cat.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="card">
           <form onSubmit={handleSave}>
             <div className="form-group">

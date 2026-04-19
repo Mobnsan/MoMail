@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useRef } from 'react';
 import gsap from 'gsap';
 import NavBar from '../components/NavBar';
 import { detectFields, dedupeContacts, getMappedValue, validateEmail } from '../utils/validation';
-import { getContacts, saveContacts, uploadContactFile } from '../api';
+import { getContacts, saveContacts, uploadContactFile, updateContact, deleteContact } from '../api';
 import { usePageAnimation } from '../hooks/useAnimations';
 
 function Contacts() {
@@ -133,10 +133,31 @@ function Contacts() {
 
     try {
       await saveContacts(validContacts);
-      setSaved(validContacts);
+      const updated = await getContacts();
+      setSaved(updated);
       setMessage(`${validContacts.length} contacts saved after validation and duplicate removal.`);
     } catch (error) {
       setMessage(error.message || 'Unable to save contacts.');
+    }
+  }
+
+  async function handleDelete(id) {
+    if (!window.confirm('Are you sure you want to delete this contact?')) return;
+    try {
+      await deleteContact(id);
+      setSaved(saved.filter(c => c.id !== id));
+      setMessage('Contact deleted.');
+    } catch (error) {
+      setMessage('Error deleting contact.');
+    }
+  }
+
+  async function handleUpdateGroup(contact, newGroup) {
+    try {
+      await updateContact(contact.id, { group: newGroup });
+      setSaved(saved.map(c => c.id === contact.id ? { ...c, group: newGroup } : c));
+    } catch (error) {
+      setMessage('Error updating group.');
     }
   }
 
@@ -248,11 +269,12 @@ function Contacts() {
                   <tr>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Company</th>
+                    <th>Group/Tag</th>
                     {saved[0] && Object.keys(saved[0])
-                      .filter(k => !['id', 'ownerId', 'name', 'email', 'company'].includes(k))
+                      .filter(k => !['id', 'ownerId', 'name', 'email', 'company', 'group'].includes(k))
                       .map(k => <th key={k}>{k}</th>)
                     }
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -260,11 +282,35 @@ function Contacts() {
                     <tr key={contact.id || `${contact.email}-${contact.name}`}>
                       <td>{contact.name}</td>
                       <td>{contact.email}</td>
-                      <td>{contact.company}</td>
+                      <td>
+                        <input 
+                          type="text"
+                          placeholder="Add group..."
+                          value={contact.group || ''}
+                          onChange={(e) => handleUpdateGroup(contact, e.target.value)}
+                          style={{ 
+                            background: 'rgba(255,255,255,0.05)', 
+                            border: '1px solid rgba(255,255,255,0.1)',
+                            borderRadius: '8px',
+                            padding: '4px 8px',
+                            fontSize: '0.85rem',
+                            minHeight: '32px'
+                          }}
+                        />
+                      </td>
                       {Object.keys(contact)
-                        .filter(k => !['id', 'ownerId', 'name', 'email', 'company'].includes(k))
+                        .filter(k => !['id', 'ownerId', 'name', 'email', 'company', 'group'].includes(k))
                         .map(k => <td key={k}>{contact[k]}</td>)
                       }
+                      <td>
+                        <button 
+                          className="button-icon" 
+                          onClick={() => handleDelete(contact.id)}
+                          style={{ width: '32px', height: '32px', fontSize: '14px' }}
+                        >
+                          ✕
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

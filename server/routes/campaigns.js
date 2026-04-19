@@ -49,61 +49,51 @@ router.post('/', requireAuth, async (req, res) => {
     ? 'scheduled'
     : (userSettings.provider === 'console' || !userSettings.provider ? 'simulated' : 'sent');
 
-  const recipients = [];
-  let deliveredCount = 0;
-  const shouldSendNow = !isScheduled && campaignStatus === 'sent';
-
-  for (const contact of selectedContacts) {
-    const message = {
-      to: contact.email,
-      from: template.senderEmail || userSettings.fromEmail || process.env.EMAIL_FROM || 'no-reply@mona-email.app',
-      subject: renderTemplate(template.subject, contact),
-      text: renderTemplate(template.body, contact),
-      html: renderTemplate(template.body, contact).replace(/\n/g, '<br />'),
-    };
-
-    let status = shouldSendNow ? 'failed' : 'pending';
-    let errorMessage = '';
-    if (shouldSendNow) {
-      try {
-        await sendEmail(message, {
-          provider: userSettings.provider,
-          providerConfig: userSettings.providerConfig,
-        });
-        status = userSettings.provider === 'console' || !userSettings.provider ? 'simulated' : 'sent';
-        if (status === 'sent') {
-          deliveredCount += 1;
-        }
-      } catch (error) {
-        status = 'failed';
-        errorMessage = error.message || String(error);
-        console.error(`[Campaign Send Error] User: ${req.session.userId}, Email: ${contact.email}, Error: ${errorMessage}`);
-      }
-    }
-
-    const recipientObj = {
-      id: uuidv4(),
-      email: contact.email,
-      name: contact.name,
-      company: contact.company,
-      status,
-      subject: message.subject,
-    };
-    
-    if (errorMessage) {
-      recipientObj.error = errorMessage;
-    }
-    
-    recipients.push(recipientObj);
-  }
-
   let finalStatus = campaignStatus;
   if (campaignStatus === 'sent') {
-    if (deliveredCount === 0) {
-      finalStatus = 'failed';
-    } else if (deliveredCount < recipients.length) {
-      finalStatus = 'partial';
-    }
+    // Perform sending in background batches to not block the response
+    const BATCH_SIZE = 5;
+    const DELAY_BETWEEN_BATCHES = 1000; // 1 second
+
+    (async () => {
+      for (let i = 0; i < selectedContacts.length; i += BATCH_SIZE) {
+        const batch = selectedContacts.slice(i, i + BATCH_SIZE);
+        await Promise.all(batch.map(async (contact) => {
+          const message = {
+            to: contact.email,
+            from: template.senderEmail || userSettings.fromEmail || process.env.EMAIL_FROM || 'no-reply@mona-email.app',
+            subject: renderTemplate(template.subject, contact),
+            text: renderTemplate(template.body, contact),
+            html: renderTemplate(template.body, contact).replace(/\n/g, '<br />'),
+          };
+
+          try {
+            await sendEmail(message, {
+              provider: userSettings.provider,
+              providerConfig: userSettings.providerConfig,
+            });
+            const campaignIdx = readCollection('campaigns').findIndex(c => c.id === campaign.id);
+            if (campaignIdx !== -1) {
+              const campaigns = readCollection('campaigns');
+              const recipientIdx = campaigns[campaignIdx].recipients.findIndex(r => r.email === contact.email);
+              if (recipientIdx !== -1) {
+                campaigns[campaignIdx].recipients[recipientIdx].status = userSettings.provider === 'console' || !userSettings.provider ? 'simulated' : 'sent';
+                if (campaigns[campaignIdx].recipients[recipientIdx].status === 'sent') {
+                  campaigns[campaignIdx].deliveredCount += 1;
+                }
+                saveCollection('campaigns', campaigns);
+              }
+            }
+          } catch (error) {
+            console.error(`[Queue Error] ${contact.email}: ${error.message}`);
+          }
+        }));
+        
+        if (i + BATCH_SIZE < selectedContacts.length) {
+          await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_BATCHES));
+        }
+      }
+    })();
   }
 
   const campaign = {
@@ -111,12 +101,19 @@ router.post('/', requireAuth, async (req, res) => {
     ownerId: req.session.userId,
     name: template.name,
     templateId: template.id,
-    status: finalStatus,
+    status: isScheduled ? 'scheduled' : 'sending',
     createdAt: now.toISOString(),
     scheduledAt: scheduledDate.toISOString(),
-    recipientCount: recipients.length,
-    deliveredCount,
-    recipients,
+    recipientCount: selectedContacts.length,
+    deliveredCount: 0,
+    recipients: selectedContacts.map(c => ({
+      id: uuidv4(),
+      email: c.email,
+      name: c.name,
+      company: c.company,
+      status: isScheduled ? 'pending' : 'queued',
+      subject: renderTemplate(template.subject, c)
+    })),
   };
 
   const campaigns = readCollection('campaigns');

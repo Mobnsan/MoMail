@@ -64,6 +64,14 @@ export function getContacts() {
   return request('/api/contacts');
 }
 
+export function updateContact(id, payload) {
+  return request(`/api/contacts/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+}
+
+export function deleteContact(id) {
+  return request(`/api/contacts/${id}`, { method: 'DELETE' });
+}
+
 export function getTemplates() {
   return request('/api/templates');
 }
